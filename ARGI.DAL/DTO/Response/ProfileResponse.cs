@@ -1,0 +1,9 @@
+namespace ARGI.DAL.DTO.Response
+{
+    public class ProfileResponse : BaseResponse
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+    }
+}

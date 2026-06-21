@@ -1,0 +1,50 @@
+.back {
+    /* Dark gray with transparency instead of green */
+    background-color: rgba(31, 41, 55, 0.8) !important; 
+    backdrop-filter: blur(10px); /* Blurs the image behind the card */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Deep shadow */
+    padding: 2rem;
+
+    width: 90%;         /* On mobile, take up 90% of the screen */
+    max-width: 450px;   /* On desktop, stop growing at 450px */
+    height: auto;       /* Let height grow with the content */
+    
+}
+
+/* 2. Dark Inputs (Overrides Bootstrap) */
+.darkInput {
+    background-color: #374151 !important; /* Dark Gray bg */
+    border: 1px solid #4B5563 !important; /* Gray border */
+    color: #F9FAFB !important; /* White text */
+}
+
+/* Input Focus State (Green Glow) */
+.darkInput:focus {
+    background-color: #374151 !important;
+    border-color: #10B981 !important; /* Agridome Emerald Green */
+    box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25) !important; /* Green glow */
+}
+
+/* 3. Label Text Color */
+.darkLabel {
+    color: #9CA3AF !important; /* Muted gray text */
+}
+
+/* Fix for Bootstrap 5.3 floating labels (removes white background patch) */
+.darkLabel::after {
+    background-color: transparent !important;
+}
+
+.Formbtn{
+background-color: #10B981;
+padding: 10px 40px;
+color: white;
+width: 100%;
+ border: 2px solid #10B981;
+ text-align: center;
+ text-decoration: none;
+
+border-radius: 15px 15px 15px 15px;
+
+}

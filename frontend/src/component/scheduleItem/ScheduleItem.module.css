@@ -1,0 +1,40 @@
+.ScheduleCard {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.ScheduleCard:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.TimeText {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ZoneIcon {
+  color: #38bdf8;
+}
+
+.ZoneText {
+  font-size: 0.95rem;
+  color: #e5e7eb;
+}
+
+.RepeatText {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.DurationBadge {
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}

@@ -1,0 +1,6 @@
+@ARGI.PL_HostAddress = http://localhost:5163
+
+GET {{ARGI.PL_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

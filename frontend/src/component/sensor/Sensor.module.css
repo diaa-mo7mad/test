@@ -1,0 +1,41 @@
+.back{
+     background-color: rgba(31, 41, 55, 0.8) ; 
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+    padding: 2rem;
+    width: 100%;
+    min-width: 250px;
+    box-sizing: border-box;
+}
+.space{
+   width: 100%
+}
+.name{
+    color: white;
+    font-size: 15px;
+
+}
+.value{
+    color: white;
+    font-size: 17px;
+}
+.unit{
+    color: white;
+    font-size: 10px;
+}
+.target{
+    color: white;
+    font-size: 10px;
+}
+.icon{
+    text-align: center;
+    color: rgba(32, 201, 94);
+    font-size: 16px;
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 50% 50%;
+    background-color:rgba(30, 41, 59, 0.1);
+    width: 30px;
+    height: 30px;
+}

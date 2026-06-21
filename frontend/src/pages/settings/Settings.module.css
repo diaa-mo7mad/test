@@ -1,0 +1,89 @@
+/* Settings.module.css */
+
+/* --- 1. إعدادات الصفحة والخلفية --- */
+.pageWrapper {
+  background-color: #0d0c1d; /* لون الخلفية الرئيسي */
+  min-height: 100vh;
+  color: #e2e8f0; /* لون النص الافتراضي للصفحة */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* --- 2. (Cards) --- */
+.darkCard {
+  background-color: #1e1e26 !important; /* لون الكارد الداكن */
+  border: 1px solid rgba(255, 255, 255, 0.08) !important; /* حدود خفيفة جداً */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* ظل خفيف */
+}
+
+/* --- 3. مربع الأيقونة البنفسجي في العنوان --- */
+.headerIconBox {
+  width: 50px;
+  height: 50px;
+  background: rgba(139, 92, 246, 0.15); /* بنفسجي شفاف */
+  border: 1px solid rgba(139, 92, 246, 0.3); /* حدود بنفسجية */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a78bfa; /* لون الأيقونة */
+}
+
+/* --- 4. (Avatar) --- */
+.avatarCircle {
+  width: 70px;
+  height: 70px;
+  background-color: #064e3b; /* خلفية خضراء غامقة */
+  color: #10b981; /* نص أخضر فاتح */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 2px solid rgba(16, 185, 129, 0.2);
+}
+
+/* --- 5. حقول الإدخال (Inputs) --- */
+.darkInput {
+  background-color: #2d2d38 !important; /* لون خلفية الحقل */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important; /* لون الحدود */
+  color: #ffffff !important; /* لون النص الذي يكتبه المستخدم (أبيض) */
+  font-size: 0.95rem;
+}
+
+/* عند الضغط داخل الحقل (Focus) */
+.darkInput:focus {
+  background-color: #2d2d38 !important;
+  border-color: #10b981 !important; /* حدود خضراء عند الكتابة */
+  box-shadow: none !important; /* إزالة توهج البوتستراب الأزرق */
+  color: #ffffff !important;
+}
+
+/* لون النص التوضيحي الباهت (Placeholder) */
+.darkInput::placeholder {
+  color: #94a3b8 !important; /* رمادي فاتح ليكون مقروءاً */
+  opacity: 1;
+}
+
+/* --- 6. أيقونات جانب الحقول (Input Group Text) --- */
+.inputGroupText {
+  background-color: #2d2d38 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-right: none !important; /* إزالة الحد الفاصل بين الأيقونة والحقل */
+  color: #94a3b8 !important; /* لون الأيقونة */
+}
+
+/* --- 7. الأزرار (Buttons) --- */
+/* زر الرفع الشفاف */
+.btnDark {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.btnDark:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}

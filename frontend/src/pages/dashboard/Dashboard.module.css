@@ -1,0 +1,204 @@
+
+/* --- الحاوية الرئيسية --- */
+.dashboardContainer {
+  background-color: #0d0c1d;
+  min-height: 100vh;
+  color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  padding-bottom: 2rem;
+  overflow-x: hidden;
+}
+
+/* --- الهيدر والعناوين --- */
+.mainIconBox {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #e2e8f0;
+}
+
+.h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(90deg, #ffffff 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.p {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.pSmall {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 1.25rem;
+}
+
+/* --- البطاقات --- */
+.mainCard {
+  background-color: #25262c;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  height: 100%;
+}
+
+.mainCard:hover {
+  border-color: rgba(168, 85, 247, 0.3);
+  transform: translateY(-3px);
+}
+
+/* --- عناصر البطاقات (Stats) --- */
+.label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #94a3b8;
+  display: block;
+}
+
+.valueLarge {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.5px;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.iconCircle {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* ألوان الأيقونات */
+.soilIcon  { background: rgba(56, 189, 248, 0.1); color: #38bdf8; }
+.tempIcon  { background: rgba(244, 63, 94, 0.1);  color: #f43f5e; }
+.sunIcon   { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.waterIcon { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+
+/* --- الرسم البياني --- */
+.chartWrapper {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+/* --- الأزرار --- */
+.controlBtn {
+  border-radius: 12px;
+  padding: 10px 15px;
+  border-color: rgba(255,255,255,0.1);
+  color: #e2e8f0;
+}
+
+.controlBtn:hover {
+  background-color: rgba(255,255,255,0.1);
+  border-color: #a855f7;
+  color: #fff;
+}
+
+/* --- التنبيهات (Insights) --- */
+.insightRow {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: background 0.2s;
+}
+
+.insightRow:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.insightIconCircle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.insightTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0 0 2px 0;
+}
+
+.insightDesc {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* ألوان التنبيهات */
+.insightYellow { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
+.insightGreen  { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+.insightBlue   { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); }
+
+/* --- قائمة التنبيهات القابلة للتمرير (Scrollable) --- */
+.notificationList {
+  max-height: 300px; /* تحديد أقصى ارتفاع */
+  overflow-y: auto;  /* تفعيل السكرول عند الزيادة */
+  padding-right: 10px; /* مسافة لعدم تغطية السكرول للمحتوى */
+}
+
+/* تخصيص شكل شريط التمرير */
+.notificationList::-webkit-scrollbar {
+  width: 6px;
+}
+.notificationList::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+.notificationList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15); 
+  border-radius: 4px;
+}
+.notificationList::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25); 
+}
+
+/* --- استجابة الشاشات الصغيرة --- */
+@media (max-width: 768px) {
+  .dashboardContainer {
+    padding-bottom: 1rem;
+  }
+  .valueLarge {
+    font-size: 1.5rem;
+  }
+  .h2 {
+    font-size: 1.25rem;
+  }
+  .chartWrapper {
+    height: 250px;
+  }
+}

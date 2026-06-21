@@ -1,0 +1,49 @@
+
+
+.back {
+  background-color: #1e293b; /* لون أفتح قليلاً من الخلفية العامة لتمييز الناف بار */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+}
+
+.navbarLogo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+  margin-right: 2rem;
+}
+
+.navLink {
+  display: block;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #94a3b8; /* لون رمادي للنصوص غير النشطة */
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  border-radius: 8px;
+  margin: 0 5px;
+}
+
+/* عند تمرير الماوس */
+.navLink:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* عند تفعيل الرابط (الصفحة الحالية) */
+.active {
+  color: #10b981 !important; /* اللون الأخضر المميز */
+  background-color: rgba(16, 185, 129, 0.1);
+  font-weight: 600;
+}
+
+/* زر القائمة في الموبايل */
+.togglerIcon {
+  filter: invert(1); /* لجعل أيقونة القائمة بيضاء */
+}
