@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ARGI.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260610180750_AddUserProfileFields")]
-    partial class AddUserProfileFields
+    [Migration("20260621124020_AddWateringTargetMoisture")]
+    partial class AddWateringTargetMoisture
     {
                 protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -127,7 +127,13 @@ namespace ARGI.DAL.Migrations
                     b.Property<bool>("IsManualWateringRequested")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsPlantProfileCalibrated")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastPingTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastWateredAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MacAddress")
@@ -145,6 +151,24 @@ namespace ARGI.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("OptimalLightMax")
+                        .HasColumnType("float");
+
+                    b.Property<double>("OptimalLightMin")
+                        .HasColumnType("float");
+
+                    b.Property<double>("OptimalMoistureMax")
+                        .HasColumnType("float");
+
+                    b.Property<double>("OptimalMoistureMin")
+                        .HasColumnType("float");
+
+                    b.Property<double>("OptimalTempMax")
+                        .HasColumnType("float");
+
+                    b.Property<double>("OptimalTempMin")
+                        .HasColumnType("float");
+
                     b.Property<string>("PlantType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -156,6 +180,16 @@ namespace ARGI.DAL.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("WateringDurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WateringSource")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("WateringTargetMoisture")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

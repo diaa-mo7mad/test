@@ -1,4 +1,4 @@
-﻿using ARGI.DAL.DTO.Request;
+using ARGI.DAL.DTO.Request;
 using ARGI.DAL.DTO.Response;
 using ARGI.DAL.Models;
 using ARGI.DAL.Repository;
@@ -80,7 +80,7 @@ namespace ARGI.BLL.Service
                 await _domeRepository.AddAsync(dome);
                 await _domeRepository.SaveChangesAsync();
 
-                // معايرة النطاقات المثالية بالذكاء الاصطناعي تلقائياً
+                
                 await _aiInsightService.CalibrateProfileAsync(dome.Id, userId);
 
                 var response = dome.Adapt<DomeResponseDto>();
@@ -118,12 +118,17 @@ namespace ARGI.BLL.Service
             {
                 
                 bool plantTypeChanged = existingDome.PlantType != requestDto.PlantType;
+                bool wasAiEnabled = existingDome.IsAiEnabled;
                 requestDto.Adapt(existingDome);
+
+                
+                if (wasAiEnabled && !existingDome.IsAiEnabled && existingDome.WateringSource == "AI")
+                    existingDome.IsManualWateringRequested = false;
 
                 _domeRepository.Update(existingDome);
                 await _domeRepository.SaveChangesAsync();
 
-                // إعادة المعايرة لو تغيّر نوع النبات
+                
                 if (plantTypeChanged && !string.IsNullOrEmpty(existingDome.PlantType))
                     await _aiInsightService.CalibrateProfileAsync(existingDome.Id, userId);
 
@@ -177,7 +182,8 @@ namespace ARGI.BLL.Service
             dome.IsManualWateringRequested = true;
             dome.WateringSource = "Manual";
             dome.WateringDurationMinutes = 15;
-            dome.LastWateredAt = DateTime.Now; // بداية جلسة الري
+            dome.WateringTargetMoisture = dome.OptimalMoistureMax; 
+            dome.LastWateredAt = DateTime.Now; 
             _domeRepository.Update(dome);
             await _domeRepository.SaveChangesAsync();
 
@@ -190,8 +196,8 @@ namespace ARGI.BLL.Service
             if (dome == null || dome.UserId != userId)
                 return new BaseResponse { Success = false, Message = "المزرعة غير موجودة أو لا تملك صلاحية الوصول" };
 
-            dome.IsManualWateringRequested = false; // أمر إيقاف للقطعة
-            // نضع LastWateredAt الآن حتى لا يعيد الذكاء الاصطناعي التشغيل فوراً (فترة سماح)
+            dome.IsManualWateringRequested = false; 
+            
             dome.LastWateredAt = DateTime.Now;
             _domeRepository.Update(dome);
             await _domeRepository.SaveChangesAsync();

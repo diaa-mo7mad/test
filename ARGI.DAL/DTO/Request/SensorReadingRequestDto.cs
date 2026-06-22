@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,6 @@ namespace ARGI.DAL.DTO.Request
         public double SoilMoisture { get; set; }
         public double LightIntensity { get; set; }
         public double RainState { get; set; }
-        public DateTime? Timestamp { get; set; } // اختياري — للبيانات التاريخية
+        public DateTime? Timestamp { get; set; } 
     }
 }

@@ -16,7 +16,7 @@ const Domes = () => {
   const [domes, setDomes]         = useState([]);
   const [loading, setLoading]     = useState(true);
   const [modal, setModal]         = useState(null); // null | 'add' | 'edit' | 'delete'
-  const [editing, setEditing]     = useState(null); // dome object being edited/deleted
+  const [editing, setEditing]     = useState(null);
   const [form, setForm]           = useState(emptyForm);
   const [saving, setSaving]       = useState(false);
   const [error, setError]         = useState('');
@@ -31,6 +31,12 @@ const Domes = () => {
   }, []);
 
   useEffect(() => { loadDomes(); }, [loadDomes]);
+
+  // تحديث دوري كل 10 ثواني لتحديث حالة "نشطة / غير نشطة"
+  useEffect(() => {
+    const t = setInterval(loadDomes, 10000);
+    return () => clearInterval(t);
+  }, [loadDomes]);
 
   const openAdd = () => {
     setForm(emptyForm);
@@ -77,7 +83,7 @@ const Domes = () => {
       if (modal === 'add') {
         const r = await createDome(form);
         if (r.data?.success === false) { setError(r.data.message || 'Failed to create.'); return; }
-        // auto-select the new dome
+
         const newDomes = await getDomes();
         const list = Array.isArray(newDomes.data) ? newDomes.data : (newDomes.data?.value || []);
         setDomes(list);
@@ -122,7 +128,7 @@ const Domes = () => {
       <div className={styles.pageContainer}>
         <div className="container py-4">
 
-          {/* Header */}
+          {}
           <div className="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
             <div className="d-flex align-items-center gap-3">
               <div className={styles.mainIconBox}>🏡</div>
@@ -141,7 +147,7 @@ const Domes = () => {
             </div>
           </div>
 
-          {/* Content */}
+          {}
           {loading ? (
             <div className="text-center py-5" style={{ color: '#64748b' }}>
               <div className="spinner-border spinner-border-sm me-2" /> جارٍ تحميل المزارع...
@@ -159,6 +165,7 @@ const Domes = () => {
             <div className="row g-4">
               {domes.map(dome => {
                 const isActive = dome.id == selectedDomeId;
+                const online = dome.lastPingTime && (Date.now() - new Date(dome.lastPingTime).getTime()) < 30000;
                 return (
                   <div key={dome.id} className="col-12 col-md-6 col-xl-4">
                     <div
@@ -167,7 +174,7 @@ const Domes = () => {
                     >
                       {isActive && <div className={styles.activeGlow} />}
 
-                      {/* Top row */}
+                      {}
                       <div className="d-flex align-items-start justify-content-between mb-3">
                         <div className="d-flex align-items-center gap-3">
                           <div className={styles.domeIcon}>🏡</div>
@@ -177,14 +184,14 @@ const Domes = () => {
                           </div>
                         </div>
                         <div className="d-flex gap-1 flex-wrap justify-content-end">
-                          {isActive && <span className={`${styles.badge} ${styles.badgeActive}`}>نشطة</span>}
+                          <span className={`${styles.badge} ${online ? styles.badgeActive : styles.badgeNoAi}`}>{online ? 'نشطة' : 'غير نشطة'}</span>
                           <span className={`${styles.badge} ${dome.isAiEnabled ? styles.badgeAi : styles.badgeNoAi}`}>
                             {dome.isAiEnabled ? '🤖 ذكاء اصطناعي' : 'بدون ذكاء'}
                           </span>
                         </div>
                       </div>
 
-                      {/* Meta */}
+                      {}
                       <div className="d-flex flex-wrap gap-3 mb-3">
                         {(dome.country || dome.governorate) && (
                           <div className={styles.metaItem}>
@@ -206,7 +213,7 @@ const Domes = () => {
 
                       <hr className={styles.divider} />
 
-                      {/* Actions */}
+                      {}
                       <div className="d-flex align-items-center justify-content-between">
                         <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
                           الرطوبة الدنيا: <strong style={{ color: '#94a3b8' }}>{dome.minTargetMoisture ?? 30}%</strong>
@@ -233,7 +240,7 @@ const Domes = () => {
         </div>
       </div>
 
-      {/* Add / Edit Modal */}
+      {}
       {(modal === 'add' || modal === 'edit') && (
         <div className={styles.modalOverlay} onClick={closeModal}>
           <div className={styles.modalBox} onClick={e => e.stopPropagation()}>
@@ -311,7 +318,7 @@ const Domes = () => {
         </div>
       )}
 
-      {/* Delete Confirm Modal */}
+      {}
       {modal === 'delete' && editing && (
         <div className={styles.modalOverlay} onClick={closeModal}>
           <div className={styles.modalBox} style={{ maxWidth: '420px' }} onClick={e => e.stopPropagation()}>

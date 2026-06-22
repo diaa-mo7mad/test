@@ -8,13 +8,16 @@ namespace ARGI.PL.BackgroundServices
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<IrrigationWorker> _logger;
 
-        // لو سُقيت خلال هذه المدة → تجاهل الجدول القادم (قيمة عرض سريعة — أصلها ساعتان)
-        private static readonly TimeSpan RecentWateringThreshold = TimeSpan.FromMinutes(2);
-        // لو الجدول القادم خلال هذه المدة → يُعتبر "قريب"
-        private static readonly TimeSpan UpcomingScheduleWindow = TimeSpan.FromHours(1);
+        
+        private static readonly TimeSpan RecentWateringThreshold = TimeSpan.FromMinutes(1);
+        
+        private static readonly TimeSpan UpcomingScheduleWindow = TimeSpan.FromMinutes(1);
 
-        // لا نستدعي قرار الـ AI لنفس المزرعة أكثر من مرة خلال هذه المدة (قيمة عرض سريعة — أصلها 15 دقيقة)
+        
         private static readonly TimeSpan AiCheckThrottle = TimeSpan.FromSeconds(30);
+
+        
+        private static readonly TimeSpan DeviceOfflineThreshold = TimeSpan.FromSeconds(30);
         private readonly Dictionary<int, DateTime> _lastAiCheck = new();
 
         public IrrigationWorker(IServiceProvider serviceProvider, ILogger<IrrigationWorker> logger)
@@ -36,7 +39,7 @@ namespace ARGI.PL.BackgroundServices
                     _logger.LogError(ex, "خطأ في IrrigationWorker");
                 }
 
-                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken); // قيمة عرض سريعة — أصلها دقيقة
+                await Task.Delay(TimeSpan.FromSeconds(15), stoppingToken); 
             }
         }
 
@@ -53,7 +56,10 @@ namespace ARGI.PL.BackgroundServices
 
             foreach (var dome in allDomes)
             {
-                // ── 1. AI Auto-Irrigation (قرار شامل: مطر + حرارة + ضوء + رطوبة + نوع التربة/النبات/المنطقة) ──
+                var schedules = await irrigationRepo.GetByDomeIdAsync(dome.Id);
+                var now = DateTime.Now;
+
+                
                 if (dome.IsAiEnabled && !dome.IsManualWateringRequested)
                 {
                     var latest = await sensorRepo.GetLatestReadingAsync(dome.Id);
@@ -61,16 +67,23 @@ namespace ARGI.PL.BackgroundServices
                     bool wateredRecently = dome.LastWateredAt.HasValue &&
                         (DateTime.Now - dome.LastWateredAt.Value) < RecentWateringThreshold;
 
-                    // فلاتر رخيصة قبل استدعاء الـ AI (توفير تكلفة الـ API)
+                    
+                    bool deviceOnline = latest != null && (DateTime.Now - latest.Timestamp) < DeviceOfflineThreshold;
+
+                    
                     bool soilBelowTarget = latest != null && latest.SoilMoisture < dome.MinTargetMoisture;
                     bool throttleOk = !_lastAiCheck.TryGetValue(dome.Id, out var lastCheck) ||
                                       (DateTime.Now - lastCheck) >= AiCheckThrottle;
 
-                    if (latest != null && !wateredRecently && soilBelowTarget && throttleOk)
+                    
+                    bool scheduleSoon = schedules.Any(s => !s.IsExecuted &&
+                        s.StartTime > now && s.StartTime <= now.Add(UpcomingScheduleWindow));
+
+                    if (deviceOnline && !wateredRecently && soilBelowTarget && throttleOk && !scheduleSoon)
                     {
                         _lastAiCheck[dome.Id] = DateTime.Now;
 
-                        // الـ AI يأخذ القرار النهائي بناءً على كل العوامل
+                        
                         var decision = await aiService.EvaluateIrrigationAsync(dome.Id);
 
                         if (decision.ShouldWater)
@@ -78,7 +91,8 @@ namespace ARGI.PL.BackgroundServices
                             dome.IsManualWateringRequested = true;
                             dome.WateringSource = "AI";
                             dome.WateringDurationMinutes = decision.DurationMinutes > 0 ? decision.DurationMinutes : 15;
-                            dome.LastWateredAt = DateTime.Now; // بداية جلسة الري
+                            dome.WateringTargetMoisture = decision.TargetUpperMoisture; 
+                            dome.LastWateredAt = DateTime.Now; 
                             domeRepo.Update(dome);
 
                             await notificationService.CreateNotificationAsync(dome.Id,
@@ -93,21 +107,18 @@ namespace ARGI.PL.BackgroundServices
                     }
                 }
 
-                // ── 2. Scheduled Irrigation ────────────────────────────────────────
-                var schedules = await irrigationRepo.GetByDomeIdAsync(dome.Id);
-                var now = DateTime.Now;
-
+                
                 foreach (var schedule in schedules)
                 {
                     bool isDue = schedule.StartTime <= now && !schedule.IsExecuted;
                     bool isUpcoming = schedule.StartTime > now &&
                                      schedule.StartTime <= now.Add(UpcomingScheduleWindow);
 
-                    // تحقق إن ما سُقينا مؤخراً
+                    
                     bool wateredRecently = dome.LastWateredAt.HasValue &&
                         (DateTime.Now - dome.LastWateredAt.Value) < RecentWateringThreshold;
 
-                    // ── Smart Skip: إلغاء الجدول لو السقاية مؤخراً ──
+                    
                     if (wateredRecently && (isDue || isUpcoming))
                     {
                         string timeAgo = dome.LastWateredAt.HasValue
@@ -127,13 +138,14 @@ namespace ARGI.PL.BackgroundServices
                         continue;
                     }
 
-                    // ── تنفيذ الجدول ──
+                    
                     if (isDue && !dome.IsManualWateringRequested)
                     {
                         dome.IsManualWateringRequested = true;
                         dome.WateringSource = "Scheduled";
                         dome.WateringDurationMinutes = schedule.DurationMinutes > 0 ? schedule.DurationMinutes : 15;
-                        dome.LastWateredAt = DateTime.Now; // بداية جلسة الري
+                        dome.WateringTargetMoisture = dome.OptimalMoistureMax; 
+                        dome.LastWateredAt = DateTime.Now; 
                         domeRepo.Update(dome);
 
                         await notificationService.CreateNotificationAsync(dome.Id,

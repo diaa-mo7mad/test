@@ -4,22 +4,22 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ARGI.DAL.Migrations
 {
-        public partial class AddWateringDuration : Migration
+        public partial class AddWateringTargetMoisture : Migration
     {
                 protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "WateringDurationMinutes",
+            migrationBuilder.AddColumn<double>(
+                name: "WateringTargetMoisture",
                 table: "Domes",
-                type: "int",
+                type: "float",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0.0);
         }
 
                 protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "WateringDurationMinutes",
+                name: "WateringTargetMoisture",
                 table: "Domes");
         }
     }

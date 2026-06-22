@@ -2,7 +2,7 @@ import style from "./Notifications.module.css"
 
 function Notifications({icon,header,content,time}){
 
-   
+
 
 
 
@@ -22,7 +22,7 @@ function Notifications({icon,header,content,time}){
 
 
             </div>
-            
+
 
 
 

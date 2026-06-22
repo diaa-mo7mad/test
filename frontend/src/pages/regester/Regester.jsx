@@ -54,7 +54,7 @@ function Register() {
   return (
     <section className="d-flex justify-content-center align-items-center vh-100">
       <div className={`rounded-4 ${style.back}`}>
-        <h1 className="text-center my-3">Argi-Dome</h1>
+        <h1 className="text-center my-3">Agridome</h1>
         <Btn regester="1" />
         <form onSubmit={handleSubmit}>
           {errors.general && <div className="alert alert-danger py-2">{errors.general}</div>}

@@ -29,7 +29,7 @@ namespace ARGI.PL.Areas.User
             return Ok(result);
         }
 
-        // يُستدعى مرة عند إنشاء المزرعة أو تغيير نوع النبات
+      
         [HttpPost("{domeId}/calibrate")]
         public async Task<IActionResult> Calibrate(int domeId)
         {
@@ -46,7 +46,7 @@ namespace ARGI.PL.Areas.User
             return Ok(new { domeId, healthScore = score });
         }
 
-        // AI يقترح جدول ري ويحفظه مباشرة
+        
         [HttpPost("{domeId}/suggest-schedule")]
         public async Task<IActionResult> SuggestSchedule(int domeId)
         {

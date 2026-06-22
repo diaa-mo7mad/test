@@ -6,7 +6,7 @@ namespace ARGI.BLL.Service
     {
         Task<List<AiInsightDto>> GenerateInsightsAsync(int domeId, string userId);
         Task<PlantProfileDto> CalibrateProfileAsync(int domeId, string userId);
-        // قرار سقاية شامل يعتمد على كل البيانات (يُستدعى داخلياً من الـ Worker)
+        
         Task<IrrigationDecisionDto> EvaluateIrrigationAsync(int domeId);
         Task<double> CalculateHealthScoreAsync(int domeId);
         Task<List<AiScheduleSuggestionDto>> SuggestScheduleAsync(int domeId, string userId);

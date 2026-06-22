@@ -26,7 +26,7 @@ namespace ARGI.PL
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            
 
             builder.Services.AddControllers();
             builder.Services.AddCors(options =>
@@ -37,7 +37,7 @@ namespace ARGI.PL
                           .AllowAnyMethod()
                           .AllowCredentials());
             });
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            
             builder.Services.AddOpenApi(options =>
             {
                 options.AddDocumentTransformer((document, context, cancellationToken) =>
@@ -140,7 +140,7 @@ namespace ARGI.PL
             var app = builder.Build();
             app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
-            // Configure the HTTP request pipeline.
+            
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();

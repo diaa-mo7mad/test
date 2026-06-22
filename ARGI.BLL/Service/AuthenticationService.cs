@@ -1,4 +1,4 @@
-﻿using ARGI.DAL.DTO.Response;
+using ARGI.DAL.DTO.Response;
 using ARGI.DAL.Models;
 using ARGI.DAL.DTO.Request;
 using Microsoft.Extensions.Configuration;
@@ -137,11 +137,11 @@ namespace ARGI.BLL.Service
                 {
 
                     await _userManager.AddToRoleAsync(user, "User");
-                    // Auto-confirm email for development
+                    
                     var confirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     await _userManager.ConfirmEmailAsync(user, confirmToken);
 
-                    // إنشاء مزرعة أولية للمستخدم تلقائياً
+                    
                     await _domeService.CreateDomeAsync(new ARGI.DAL.DTO.Request.DomeRequestDto
                     {
                         Name = $"مزرعة {user.FirstName}",
@@ -245,7 +245,8 @@ namespace ARGI.BLL.Service
                 Message = "Success",
                 FirstName = user.FirstName ?? "",
                 LastName = user.LastName ?? "",
-                Email = user.Email
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber ?? ""
             };
         }
 
@@ -258,6 +259,8 @@ namespace ARGI.BLL.Service
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.FullName = $"{request.FirstName} {request.LastName}".Trim();
+            if (request.PhoneNumber != null)
+                user.PhoneNumber = request.PhoneNumber;
 
             if (user.Email != request.Email)
             {

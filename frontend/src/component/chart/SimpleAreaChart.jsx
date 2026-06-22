@@ -1,17 +1,17 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,ResponsiveContainer } from 'recharts';
 import style from "./SimpleAreaChart.module.css"
-// #region Sample data
 
 
-// #endregion
+
+
 const SimpleAreaChart = ({data}) => {
   return (
  <div className={style.chart}>
-      
-      {/* 2. RESPONSIVE CONTAINER: Just fills the parent div completely */}
+
+      {}
       <ResponsiveContainer width="100%" height="100%">
-        
-        {/* 3. CHART: No width/height/className props here */}
+
+        {}
         <AreaChart
         className={`${style.Innerchart}`}
           data={data}

@@ -10,7 +10,7 @@ import Navbar from '../../component/navBar/Navbar';
 import * as signalR from '@microsoft/signalr';
 import {
   getLatestReading, getReadings, getNotifications,
-  markNotificationRead, irrigateDome, getDomes,
+  markNotificationRead, irrigateDome, stopIrrigation, getDomes,
   BASE_URL, TUNNEL_HEADERS
 } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
@@ -57,7 +57,6 @@ const Dashboard = () => {
     } catch (e) { console.error(e); }
   }, [selectedDomeId]);
 
-  // Load domes list
   useEffect(() => {
     getDomes().then(r => {
       const list = Array.isArray(r.data) ? r.data : (r.data?.value || []);
@@ -68,7 +67,18 @@ const Dashboard = () => {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  // SignalR
+  useEffect(() => {
+    if (!selectedDomeId) return;
+    const t = setInterval(() => {
+      loadData();
+      getDomes().then(r => {
+        const list = Array.isArray(r.data) ? r.data : (r.data?.value || []);
+        setDomes(list);
+      }).catch(() => {});
+    }, 10000);
+    return () => clearInterval(t);
+  }, [selectedDomeId, loadData]);
+
   useEffect(() => {
     if (!selectedDomeId) return;
     const conn = new signalR.HubConnectionBuilder()
@@ -107,6 +117,17 @@ const Dashboard = () => {
     }
   };
 
+  const handleStop = async () => {
+    if (!selectedDomeId) return;
+    setIrrigating(true);
+    try {
+      await stopIrrigation(selectedDomeId);
+    } finally {
+      setIrrigating(false);
+      loadData();
+    }
+  };
+
   const handleMarkRead = async (id) => {
     await markNotificationRead(id);
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
@@ -123,10 +144,26 @@ const Dashboard = () => {
     }],
   };
 
+  const currentDome = domes.find(d => String(d.id) === String(selectedDomeId));
+  const aiRunning = currentDome?.isAiEnabled ?? false;
+  const lastTs = latest?.timestamp || latest?.readingTime || latest?.createdAt;
+  const isOnline = lastTs ? (Date.now() - new Date(lastTs).getTime()) < 30000 : false;
+  const r = (v) => (v != null ? Math.round(v) : '--');
+  const moistureSub = `Min (You) ${r(currentDome?.minTargetMoisture)}% • Max (AI) ${r(currentDome?.optimalMoistureMax)}%`;
+  const tempSub = `Ideal (AI) ${r(currentDome?.optimalTempMin)}-${r(currentDome?.optimalTempMax)}°C`;
+  const lightSub = `Ideal (AI) ${r(currentDome?.optimalLightMin)}-${r(currentDome?.optimalLightMax)} lux`;
+
+  const thermoIcon = (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fb7185"
+      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 14.76V5a2 2 0 0 0-4 0v9.76a4 4 0 1 0 4 0z" />
+    </svg>
+  );
+
   const cardsData = latest ? [
-    { title: "Soil Moisture", value: (latest.soilMoisture ?? latest.soilMoisturePercent)?.toFixed(1) ?? '--', unit: "%", sub: "Target: 60-75%", icon: "💧", theme: styles.soilIcon },
-    { title: "Temp & Humidity", value: latest.temperature?.toFixed(1) ?? '--', unit: "°C", sub: `Humidity: ${latest.humidity?.toFixed(0) ?? '--'}%`, icon: "🌡️", theme: styles.tempIcon },
-    { title: "Light Intensity", value: latest.lightIntensity?.toFixed(0) ?? '--', unit: "lux", sub: "Target: 7k-10k", icon: "☀️", theme: styles.sunIcon },
+    { title: "Soil Moisture", value: (latest.soilMoisture ?? latest.soilMoisturePercent)?.toFixed(1) ?? '--', unit: "%", sub: moistureSub, icon: "💧", theme: styles.soilIcon },
+    { title: "Temp & Humidity", value: latest.temperature?.toFixed(1) ?? '--', unit: "°C", sub: tempSub, icon: thermoIcon, theme: styles.tempIcon },
+    { title: "Light Intensity", value: latest.lightIntensity?.toFixed(0) ?? '--', unit: "lux", sub: lightSub, icon: "☀️", theme: styles.sunIcon },
     { title: "Rain State", value: (latest.rainState === 1 || latest.rainState === true) ? 'Raining' : 'Clear', unit: "", sub: "Current state", icon: "🌧️", theme: styles.waterIcon },
   ] : [];
 
@@ -139,7 +176,7 @@ const Dashboard = () => {
       <div className={styles.dashboardContainer}>
         <div className="container py-4">
 
-          {/* Header */}
+          {}
           <div className="row align-items-center mb-4">
             <div className="col">
               <div className="d-flex align-items-center justify-content-between">
@@ -164,7 +201,7 @@ const Dashboard = () => {
           <div className="row g-4 mb-4">
             {(cardsData.length > 0 ? cardsData : [
               { title: "Soil Moisture", value: "--", unit: "%", sub: "No data yet", icon: "💧", theme: styles.soilIcon },
-              { title: "Temp & Humidity", value: "--", unit: "°C", sub: "No data yet", icon: "🌡️", theme: styles.tempIcon },
+              { title: "Temp & Humidity", value: "--", unit: "°C", sub: "No data yet", icon: thermoIcon, theme: styles.tempIcon },
               { title: "Light Intensity", value: "--", unit: "lux", sub: "No data yet", icon: "☀️", theme: styles.sunIcon },
               { title: "Rain State", value: "--", unit: "", sub: "No data yet", icon: "🌧️", theme: styles.waterIcon },
             ]).map((card, index) => (
@@ -186,7 +223,7 @@ const Dashboard = () => {
             ))}
           </div>
 
-          {/* Main Content */}
+          {}
           <div className="row g-4 mb-4">
             <div className="col-12 col-lg-8">
               <div className={styles.mainCard}>
@@ -206,11 +243,15 @@ const Dashboard = () => {
                   <h3 className={styles.h3}>System Status <span style={{ float: 'right' }}>ℹ️</span></h3>
                   <div className="d-flex justify-content-between align-items-center mb-3 p-2" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '10px' }}>
                     <span className="text-light">📡 Connection</span>
-                    <span className="badge bg-success bg-opacity-25 text-success">Online</span>
+                    <span className={`badge ${isOnline ? 'bg-success bg-opacity-25 text-success' : 'bg-danger bg-opacity-25 text-danger'}`}>
+                      {isOnline ? 'Online' : 'Offline'}
+                    </span>
                   </div>
                   <div className="d-flex justify-content-between align-items-center mb-2 p-2" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '10px' }}>
                     <span className="text-light">🧠 AI Monitor</span>
-                    <span className="badge bg-primary bg-opacity-25 text-primary">Running</span>
+                    <span className={`badge ${aiRunning ? 'bg-primary bg-opacity-25 text-primary' : 'bg-secondary bg-opacity-25 text-secondary'}`}>
+                      {aiRunning ? 'Running' : 'Stopped'}
+                    </span>
                   </div>
                   <div className="text-end mt-2">
                     <small className={styles.pSmall}>Last update: {lastUpdate}</small>
@@ -224,9 +265,9 @@ const Dashboard = () => {
                       className={`btn btn-outline-light d-flex justify-content-between align-items-center ${styles.controlBtn}`}>
                       <span>{irrigating ? 'Irrigating...' : 'Start Irrigation'}</span> <span>💧</span>
                     </button>
-                    <button onClick={loadData}
+                    <button onClick={handleStop} disabled={irrigating}
                       className={`btn btn-outline-light d-flex justify-content-between align-items-center ${styles.controlBtn}`}>
-                      <span>Refresh Sensors</span> <span>🔄</span>
+                      <span>Stop Irrigation</span> <span>🛑</span>
                     </button>
                   </div>
                 </div>
@@ -234,7 +275,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Notifications */}
+          {}
           <div className="row">
             <div className="col-12">
               <div className={styles.mainCard}>
@@ -262,7 +303,7 @@ const Dashboard = () => {
                               {icon}
                             </div>
                             <div className="flex-grow-1" style={{ minWidth: 0 }}>
-                              <p style={{ color: '#e2e8f0', fontSize: '0.88rem', lineHeight: '1.5', marginBottom: '5px', wordBreak: 'break-word' }}>
+                              <p dir="rtl" style={{ color: '#e2e8f0', fontSize: '0.88rem', lineHeight: '1.7', marginBottom: '5px', wordBreak: 'break-word', textAlign: 'right' }}>
                                 {note.message}
                               </p>
                               <span style={{ color: '#64748b', fontSize: '0.75rem' }}>

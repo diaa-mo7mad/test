@@ -1,15 +1,13 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace ARGI.DAL.Migrations
 {
-    /// <inheritdoc />
-    public partial class AddWateringTracking : Migration
+        public partial class AddWateringTracking : Migration
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
+                protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<DateTime>(
                 name: "LastWateredAt",
@@ -25,8 +23,7 @@ namespace ARGI.DAL.Migrations
                 defaultValue: "");
         }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
+                protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
                 name: "LastWateredAt",

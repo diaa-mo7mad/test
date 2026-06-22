@@ -54,7 +54,7 @@ namespace ARGI.PL.Areas.User
                     dailyData = new List<object>()
                 });
 
-            // تجميع البيانات حسب الفترة
+          
             IEnumerable<object> grouped;
 
             double CalcHealth(double moisture, double temp, double light)

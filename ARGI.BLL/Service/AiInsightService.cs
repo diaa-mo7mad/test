@@ -153,14 +153,14 @@ namespace ARGI.BLL.Service
                 var profile = JsonSerializer.Deserialize<PlantProfileDto>(text, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 if (profile == null) return GetDefaultProfile(plantType);
 
-                // حفظ النطاقات في الـ Dome
+                
                 dome.OptimalMoistureMin = profile.OptimalMoistureMin;
                 dome.OptimalMoistureMax = profile.OptimalMoistureMax;
                 dome.OptimalTempMin = profile.OptimalTempMin;
                 dome.OptimalTempMax = profile.OptimalTempMax;
                 dome.OptimalLightMin = profile.OptimalLightMin;
                 dome.OptimalLightMax = profile.OptimalLightMax;
-                // ملاحظة: لا ندهس MinTargetMoisture — هذه قيمة يحددها المالك ويجب احترامها
+                
                 dome.IsPlantProfileCalibrated = true;
                 _domeRepository.Update(dome);
                 await _domeRepository.SaveChangesAsync();
@@ -186,7 +186,7 @@ namespace ARGI.BLL.Service
             if (latest == null)
                 return new IrrigationDecisionDto { ShouldWater = false, Reason = "لا توجد قراءات" };
 
-            // قاعدة صارمة: لا سقاية أثناء المطر مهما كانت بقية العوامل
+            
             if (latest.RainState >= 1.0)
                 return new IrrigationDecisionDto { ShouldWater = false, Reason = "هناك مطر حالياً — تم تأجيل السقاية" };
 
@@ -207,8 +207,12 @@ namespace ARGI.BLL.Service
 
 اعتبارات مهمة: التربة الطينية تحتفظ بالماء أطول من الرملية، الحرارة العالية والضوء القوي يزيدان التبخر فتزيد الحاجة للري، الرطوبة الجوية العالية تقلل الحاجة للري، احترم الحد الأدنى الذي حدده المالك.
 
+كذلك حدّد ""الحد الأعلى للرطوبة"" الذي يجب أن نسقي حتى نصل إليه ثم نتوقف — اختره ديناميكياً حسب الظروف الحالية:
+- في الجو الحار/الجاف/الضوء القوي اجعله أعلى (لأن التبخر سريع)، وفي الجو المعتدل/الرطب اجعله أقل.
+- يجب أن يكون أكبر من الحد الأدنى ({dome.MinTargetMoisture}%) وأقل من 95%.
+
 أجب بصيغة JSON فقط بدون أي نص إضافي:
-{{""shouldWater"": true/false, ""durationMinutes"": <رقم بين 5 و 30>, ""reason"": ""سبب مختصر بالعربي""}}";
+{{""shouldWater"": true/false, ""durationMinutes"": <رقم بين 5 و 30>, ""targetUpperMoisture"": <الحد الأعلى المتغير>, ""reason"": ""سبب مختصر بالعربي""}}";
 
             try
             {
@@ -229,7 +233,7 @@ namespace ARGI.BLL.Service
                     new StringContent(json, Encoding.UTF8, "application/json"));
 
                 if (!response.IsSuccessStatusCode)
-                    return GetFallbackDecision(latest.SoilMoisture, dome.MinTargetMoisture);
+                    return GetFallbackDecision(latest.SoilMoisture, dome.MinTargetMoisture, dome.OptimalMoistureMax);
 
                 var body = await response.Content.ReadAsStringAsync();
                 using var doc = JsonDocument.Parse(body);
@@ -238,22 +242,30 @@ namespace ARGI.BLL.Service
 
                 var decision = JsonSerializer.Deserialize<IrrigationDecisionDto>(text,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                return decision ?? GetFallbackDecision(latest.SoilMoisture, dome.MinTargetMoisture);
+                if (decision == null)
+                    return GetFallbackDecision(latest.SoilMoisture, dome.MinTargetMoisture, dome.OptimalMoistureMax);
+
+                
+                if (decision.TargetUpperMoisture <= dome.MinTargetMoisture || decision.TargetUpperMoisture > 95)
+                    decision.TargetUpperMoisture = dome.OptimalMoistureMax > dome.MinTargetMoisture
+                        ? dome.OptimalMoistureMax : dome.MinTargetMoisture + 10;
+                return decision;
             }
             catch
             {
-                return GetFallbackDecision(latest.SoilMoisture, dome.MinTargetMoisture);
+                return GetFallbackDecision(latest.SoilMoisture, dome.MinTargetMoisture, dome.OptimalMoistureMax);
             }
         }
 
-        // قرار احتياطي بسيط لو فشل اتصال الـ AI
-        private IrrigationDecisionDto GetFallbackDecision(double soilMoisture, double minTarget)
+        
+        private IrrigationDecisionDto GetFallbackDecision(double soilMoisture, double minTarget, double optimalMax)
         {
             bool water = soilMoisture < minTarget;
             return new IrrigationDecisionDto
             {
                 ShouldWater = water,
                 DurationMinutes = 15,
+                TargetUpperMoisture = optimalMax > minTarget ? optimalMax : minTarget + 10,
                 Reason = water
                     ? $"رطوبة التربة {soilMoisture:F1}% أقل من الحد {minTarget}% (قرار احتياطي)"
                     : $"رطوبة التربة {soilMoisture:F1}% كافية"
@@ -288,7 +300,7 @@ namespace ARGI.BLL.Service
         {
             if (value >= min && value <= max) return 100.0;
 
-            // كلما ابتعدنا عن النطاق كلما انخفضت النسبة
+            
             double range = max - min;
             if (range <= 0) return 100.0;
 
@@ -300,7 +312,7 @@ namespace ARGI.BLL.Service
         private string CleanJsonResponse(string text)
         {
             if (string.IsNullOrWhiteSpace(text)) return text;
-            // إزالة markdown code blocks
+            
             text = text.Trim();
             if (text.StartsWith("```"))
             {

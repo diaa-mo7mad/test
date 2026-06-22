@@ -39,7 +39,7 @@ function Sign() {
   return (
     <section className="d-flex justify-content-center align-items-center vh-100">
       <div className={`rounded-4 ${style.back}`}>
-        <h1 className="text-center my-3">Argi-Dome</h1>
+        <h1 className="text-center my-3">Agridome</h1>
         <Btn regester="0" />
         <form onSubmit={handleSubmit}>
           {error && <div className="alert alert-danger py-2">{error}</div>}

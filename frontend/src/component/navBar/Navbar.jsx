@@ -14,31 +14,31 @@ function Navbar() {
 
 
 
-  
+
   return (
     <nav className={`navbar navbar-expand-lg ${style.back}`}>
-      <div className="container"> 
-        
-        {/* اللوجو */}
+      <div className="container">
+
+        {}
         <NavLink className={style.navbarLogo} to="/dashboard">
-          Argidome
+          Agridome
         </NavLink>
 
-        {/* زر القائمة للموبايل */}
-        <button 
-          className="navbar-toggler" 
-          type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#navbarSupportedContent" 
-          aria-controls="navbarSupportedContent" 
-          aria-expanded="false" 
+        {}
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
           aria-label="Toggle navigation"
           style={{ borderColor: 'rgba(255,255,255,0.1)' }}
         >
           <span className="navbar-toggler-icon" style={{ filter: 'invert(1)' }} />
         </button>
 
-        {/* روابط الصفحات */}
+        {}
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
@@ -63,8 +63,8 @@ function Navbar() {
 
 
              <li className="nav-item">
-              <NavLink 
-                to="/Irrigation" 
+              <NavLink
+                to="/Irrigation"
                 className={({ isActive }) => `${style.navLink} ${isActive ? style.active : ''}`}
               >
                 Irrigation
@@ -72,19 +72,19 @@ function Navbar() {
             </li>
 
             <li className="nav-item">
-              <NavLink 
-                to="/Analytics" 
+              <NavLink
+                to="/Analytics"
                 className={({ isActive }) => `${style.navLink} ${isActive ? style.active : ''}`}
               >
                 Analytics
               </NavLink>
             </li>
 
-           
+
 
             <li className="nav-item">
-              <NavLink 
-                to="/Settings" 
+              <NavLink
+                to="/Settings"
                 className={({ isActive }) => `${style.navLink} ${isActive ? style.active : ''}`}
               >
                 Settings
@@ -92,8 +92,8 @@ function Navbar() {
             </li>
 
           </ul>
-          
-          
+
+
           <div className="d-flex">
              <button onClick={handleLogout} className={`btn btn-link ${style.navLink} text-danger p-0`} style={{textDecoration:'none'}}>Logout</button>
           </div>

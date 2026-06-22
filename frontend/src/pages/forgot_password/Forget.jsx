@@ -5,7 +5,7 @@ import { sendResetCode, resetPassword } from "../../services/api";
 
 function Forget() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1); // 1=email, 2=code+newpass
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -45,7 +45,7 @@ function Forget() {
   return (
     <section className="d-flex justify-content-center align-items-center vh-100">
       <div className={`rounded-4 ${style.back}`}>
-        <h1 className="text-center my-3">Argi-Dome</h1>
+        <h1 className="text-center my-3">Agridome</h1>
         {error && <div className="alert alert-danger py-2 mx-3">{error}</div>}
 
         {step === 1 ? (

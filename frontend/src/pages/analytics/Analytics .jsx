@@ -58,7 +58,7 @@ const Analytics = () => {
   };
 
   const daily = analytics?.dailyData || [];
-  // date field already comes as "Mon","Tue" string from backend
+
   const labels = daily.map(d => d.date || '');
 
   const moistureData = {
@@ -81,9 +81,16 @@ const Analytics = () => {
     }]
   };
 
+  const thermoIcon = (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fb7185"
+      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 14.76V5a2 2 0 0 0-4 0v9.76a4 4 0 1 0 4 0z" />
+    </svg>
+  );
+
   const statCards = analytics ? [
     { title: "Avg. Soil Moisture", value: analytics.avgSoilMoisture?.toFixed(1) ?? '--', unit: "%", icon: "💧", iconColor: styles.soilIcon },
-    { title: "Avg. Temperature", value: analytics.avgTemperature?.toFixed(1) ?? '--', unit: "°C", icon: "🌡️", iconColor: styles.tempIcon },
+    { title: "Avg. Temperature", value: analytics.avgTemperature?.toFixed(1) ?? '--', unit: "°C", icon: thermoIcon, iconColor: styles.tempIcon },
     { title: "Avg. Light Intensity", value: analytics.avgLightIntensity ? (analytics.avgLightIntensity / 1000).toFixed(1) : '--', unit: "klux", icon: "☀️", iconColor: styles.sunIcon },
     { title: "Water Consumption", value: (analytics.totalWaterConsumption ?? analytics.waterConsumption)?.toFixed(0) ?? '--', unit: "L", icon: "⏲️", iconColor: styles.waterIcon },
   ] : [];
@@ -96,7 +103,7 @@ const Analytics = () => {
       <div className={styles.dashboardContainer}>
         <div className="container py-4">
 
-          {/* Header */}
+          {}
           <div className={`card ${styles.mainCard} mb-4`}>
             <div className="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
               <div className="d-flex align-items-center">
@@ -130,11 +137,11 @@ const Analytics = () => {
             </div>
           </div>
 
-          {/* Stats Grid */}
+          {}
           <div className="row g-3 mb-4">
             {(statCards.length > 0 ? statCards : [
               { title: "Avg. Soil Moisture", value: "--", unit: "%", icon: "💧", iconColor: styles.soilIcon },
-              { title: "Avg. Temperature", value: "--", unit: "°C", icon: "🌡️", iconColor: styles.tempIcon },
+              { title: "Avg. Temperature", value: "--", unit: "°C", icon: thermoIcon, iconColor: styles.tempIcon },
               { title: "Sunlight Exposure", value: "--", unit: "hrs/day", icon: "☀️", iconColor: styles.sunIcon },
               { title: "Water Consumption", value: "--", unit: "L", icon: "⏲️", iconColor: styles.waterIcon },
             ]).map((card, i) => (
@@ -155,7 +162,7 @@ const Analytics = () => {
             ))}
           </div>
 
-          {/* Charts */}
+          {}
           <div className="row g-4 mb-5">
             <div className="col-12 col-lg-6">
               <div className={`card ${styles.mainCard}`}>
@@ -192,7 +199,7 @@ const Analytics = () => {
             </div>
           </div>
 
-          {/* AI Insights */}
+          {}
           <div className="mt-5">
             <div className="d-flex align-items-center justify-content-between mb-4">
               <div className="d-flex align-items-center">
@@ -219,7 +226,7 @@ const Analytics = () => {
                   const border= insightBorder[cat]  || '#6366f1';
                   const theme = insightTheme[cat]   || styles.insightBlue;
                   return (
-                    <div key={i} style={{ background: bg, border: `1px solid ${border}30`, borderRadius: '14px', padding: '18px 20px', transition: 'transform 0.2s' }}
+                    <div key={i} dir="rtl" style={{ background: bg, border: `1px solid ${border}30`, borderRadius: '14px', padding: '18px 20px', transition: 'transform 0.2s' }}
                       onMouseEnter={e => e.currentTarget.style.transform='translateY(-2px)'}
                       onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}>
                       <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap">
@@ -229,7 +236,7 @@ const Analytics = () => {
                           </div>
                           <div className="flex-grow-1">
                             <h4 style={{ color: '#f1f5f9', fontWeight: '600', fontSize: '0.95rem', marginBottom: '6px' }}>{item.title}</h4>
-                            <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.6', marginBottom: '0' }}>{item.description || item.content || item.message}</p>
+                            <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.7', marginBottom: '0' }}>{item.description || item.content || item.message}</p>
                           </div>
                         </div>
                         <span style={{ background: `${border}20`, color: border, border: `1px solid ${border}50`, borderRadius: '20px', padding: '3px 12px', fontSize: '0.75rem', fontWeight: '600', whiteSpace: 'nowrap', flexShrink: 0 }}>

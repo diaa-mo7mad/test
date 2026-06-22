@@ -1,14 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace ARGI.DAL.Migrations
 {
-    /// <inheritdoc />
-    public partial class AddMissingFeatures : Migration
+        public partial class AddMissingFeatures : Migration
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
+                protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<double>(
                 name: "LightIntensity",
@@ -32,8 +30,7 @@ namespace ARGI.DAL.Migrations
                 defaultValue: false);
         }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
+                protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
                 name: "LightIntensity",

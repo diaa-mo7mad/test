@@ -18,6 +18,12 @@ namespace ARGI.DAL.DTO.Response
         public string SoilType { get; set; }
         public bool IsAiEnabled { get; set; }
         public double MinTargetMoisture { get; set; }
+        public double OptimalMoistureMin { get; set; }
+        public double OptimalMoistureMax { get; set; }
+        public double OptimalTempMin { get; set; }
+        public double OptimalTempMax { get; set; }
+        public double OptimalLightMin { get; set; }
+        public double OptimalLightMax { get; set; }
         public bool IsManualWateringRequested { get; set; }
         public string WateringSource { get; set; }
         public DateTime? LastPingTime { get; set; }

@@ -3,9 +3,9 @@ import { Clock, Droplets } from 'lucide-react';
 import style from './ScheduleItem.module.css';
 
 function ScheduleItem({ time, zones, duration, durationColor, repeats }) {
-  // تحديد لون الشارة (Badge) بناءً على المدخلات
+
   const badgeStyle = {
-    backgroundColor: `${durationColor}15`, // شفافية 15%
+    backgroundColor: `${durationColor}15`,
     border: `1px solid ${durationColor}50`,
     color: durationColor
   };
@@ -18,12 +18,12 @@ function ScheduleItem({ time, zones, duration, durationColor, repeats }) {
             <Clock size={18} className="text-secondary" />
             <span className={style.TimeText}>{time}</span>
           </div>
-          
+
           <div className="d-flex align-items-center gap-2">
             <Droplets size={16} className={style.ZoneIcon} />
             <span className={style.ZoneText}>{zones}</span>
           </div>
-          
+
           <p className={style.RepeatText}>Repeats: {repeats}</p>
         </div>
 

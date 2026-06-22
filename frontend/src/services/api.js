@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-// ⚙️ رابط الـ Dev Tunnel — غيّره هنا فقط (مكان واحد)
-export const BASE_URL = 'https://jn76p2bb-5163.euw.devtunnels.ms';
+export const BASE_URL = 'https://3nfmpd2b-5163.euw.devtunnels.ms';
 
-// هيدر تخطّي صفحة تحذير Dev Tunnel
 export const TUNNEL_HEADERS = {
   'X-Tunnel-Skip-AntiPhishing-Page': 'true',
 };
@@ -31,7 +29,6 @@ api.interceptors.response.use(
   }
 );
 
-// Auth
 export const login = (data) => api.post('/api/Account/Login', data);
 export const register = (data) => api.post('/api/Account/Register', data);
 export const sendResetCode = (data) => api.post('/api/Account/SendCode', data);
@@ -40,7 +37,6 @@ export const getProfile = () => api.get('/api/Account/Profile');
 export const updateProfile = (data) => api.put('/api/Account/Profile', data);
 export const changePassword = (data) => api.put('/api/Account/ChangePassword', data);
 
-// Domes
 export const getDomes = () => api.get('/api/domes');
 export const getDome = (id) => api.get(`/api/domes/${id}`);
 export const createDome = (data) => api.post('/api/domes', data);
@@ -50,25 +46,20 @@ export const irrigateDome = (id) => api.post(`/api/domes/${id}/irrigate`);
 export const stopIrrigation = (id) => api.post(`/api/domes/${id}/stop-irrigation`);
 export const toggleAi = (id, enabled) => api.put(`/api/domes/${id}`, { isAiEnabled: enabled });
 
-// Sensor Readings
 export const getLatestReading = (domeId) => api.get(`/api/sensorreadings/latest/${domeId}`);
 export const getReadings = (domeId) =>
   api.get(`/api/sensorreadings/history/${domeId}`);
 
-// Irrigation Schedules
 export const getSchedules = (domeId) => api.get(`/api/irrigationschedules/${domeId}`);
 export const addSchedule = (data) => api.post('/api/irrigationschedules', data);
 export const deleteSchedule = (id) => api.delete(`/api/irrigationschedules/${id}`);
 
-// Notifications
 export const getNotifications = (domeId) => api.get(`/api/notifications/${domeId}`);
 export const markNotificationRead = (id) => api.put(`/api/notifications/${id}/read`);
 
-// Analytics
 export const getAnalytics = (domeId, period = '7d') =>
   api.get(`/api/analytics/${domeId}?period=${period}`);
 
-// AI
 export const getAiInsights = (domeId) => api.post(`/api/aiinsights/${domeId}`);
 export const calibrateProfile = (domeId) => api.post(`/api/aiinsights/${domeId}/calibrate`);
 export const suggestAiSchedule = (domeId) => api.post(`/api/aiinsights/${domeId}/suggest-schedule`);

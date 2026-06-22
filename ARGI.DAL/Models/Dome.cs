@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -27,7 +27,7 @@ namespace ARGI.DAL.Models
         public bool IsAiEnabled { get; set; } = true;
         public double MinTargetMoisture { get; set; } = 30.0;
 
-        // نطاقات مثالية يحددها الذكاء الاصطناعي حسب نوع النبات
+        
         public double OptimalMoistureMin { get; set; } = 50.0;
         public double OptimalMoistureMax { get; set; } = 75.0;
         public double OptimalTempMin { get; set; } = 18.0;
@@ -38,8 +38,9 @@ namespace ARGI.DAL.Models
 
         
         public bool IsManualWateringRequested { get; set; } = false;
-        public string WateringSource { get; set; } = "Manual"; // Manual, Scheduled, AI
-        public int WateringDurationMinutes { get; set; } = 15;  // مدة السقاية المطلوبة للقطعة
+        public string WateringSource { get; set; } = "Manual"; 
+        public int WateringDurationMinutes { get; set; } = 15;  
+        public double WateringTargetMoisture { get; set; } = 0;  
         public DateTime? LastPingTime { get; set; }
         public DateTime? LastWateredAt { get; set; }
 

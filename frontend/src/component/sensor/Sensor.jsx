@@ -17,7 +17,7 @@ function Sensor({name,value,unit,target,icon}){
         </div>
        <p className={` ${style.icon}  `}>{icon}</p>
     </div>
- 
+
 </div>
 
 

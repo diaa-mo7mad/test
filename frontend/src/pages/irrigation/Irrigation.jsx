@@ -146,7 +146,7 @@ function Irrigation() {
       <section className="container mt-4 pb-5">
         <div className="d-flex flex-column gap-3">
 
-          {/* Header card */}
+          {}
           <div className={`${style.Controls} d-flex flex-wrap justify-content-between align-items-center gap-3`}>
             <div className="d-flex align-items-center gap-3">
               <div className={style.irgi_icon}><MdOutlineWaterDrop /></div>
@@ -164,7 +164,7 @@ function Irrigation() {
             </div>
           </div>
 
-          {/* AI card */}
+          {}
           <div className={`${style.Controls} d-flex flex-wrap justify-content-between align-items-center gap-3`}>
             <div className="d-flex align-items-center gap-3">
               <div className={style.icon}><LuBrain /></div>
@@ -187,7 +187,7 @@ function Irrigation() {
             </div>
           </div>
 
-          {/* Zone info + Chart */}
+          {}
           <div className="row g-3">
             <div className="col-12 col-lg-6">
               <div className={style.ZoneCard}>
@@ -268,7 +268,7 @@ function Irrigation() {
             </div>
           </div>
 
-          {/* Schedules */}
+          {}
           <div className={style.Controls}>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h2 className={style.h2}>Irrigation Schedule</h2>
@@ -350,7 +350,7 @@ function Irrigation() {
                       onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow=`0 4px 20px ${accent}20`; }}
                       onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none'; }}>
 
-                      {/* الوقت + الفترة */}
+                      {}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '160px' }}>
                         <div style={{ width: '46px', height: '46px', borderRadius: '13px', background: `${accent}18`, border: `1px solid ${accent}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem', flexShrink: 0 }}>
                           {periodIcon}
@@ -361,23 +361,23 @@ function Irrigation() {
                         </div>
                       </div>
 
-                      {/* المدة */}
+                      {}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Droplets size={14} color={accent} />
                         <span style={{ color: accent, fontWeight: '600', fontSize: '0.9rem' }}>{item.durationMinutes} min</span>
                       </div>
 
-                      {/* الحالة */}
+                      {}
                       <div style={{ background: statusDone ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.12)', border: `1px solid ${statusDone ? '#10b981' : '#f59e0b'}40`, borderRadius: '20px', padding: '4px 14px', color: statusDone ? '#10b981' : '#f59e0b', fontWeight: '500', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
                         {statusDone ? '✅' : '⏳'} {statusDone ? 'Done' : 'Pending'}
                       </div>
 
-                      {/* التكرار */}
+                      {}
                       <div style={{ color: '#64748b', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px', minWidth: '60px' }}>
                         {item.isRepeatDaily ? '🔁 Daily' : '1️⃣ Once'}
                       </div>
 
-                      {/* حذف */}
+                      {}
                       <button onClick={() => handleDeleteSchedule(item.id)}
                         style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '10px', padding: '8px 11px', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s', flexShrink: 0 }}
                         onMouseEnter={e => { e.currentTarget.style.background='rgba(239,68,68,0.22)'; e.currentTarget.style.borderColor='rgba(239,68,68,0.6)'; }}

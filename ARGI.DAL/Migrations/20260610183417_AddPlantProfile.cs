@@ -1,14 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace ARGI.DAL.Migrations
 {
-    /// <inheritdoc />
-    public partial class AddPlantProfile : Migration
+        public partial class AddPlantProfile : Migration
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
+                protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
                 name: "IsPlantProfileCalibrated",
@@ -60,8 +58,7 @@ namespace ARGI.DAL.Migrations
                 defaultValue: 0.0);
         }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
+                protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
                 name: "IsPlantProfileCalibrated",

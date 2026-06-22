@@ -1,4 +1,4 @@
-﻿using ARGI.DAL.DTO.Request;
+using ARGI.DAL.DTO.Request;
 using ARGI.DAL.DTO.Response;
 using ARGI.DAL.Models;
 using ARGI.DAL.Repository;
@@ -103,33 +103,43 @@ namespace ARGI.BLL.Service
             return reading.Adapt<SensorReadingResponseDto>();
         }
 
-        // تحكّم مغلق: القطعة تضخ ما دام يرجع water=true، ونوقف فوراً عند تحقّق الشروط
+        
         public async Task<object> GetEsp32CommandAsync(string macAddress)
         {
             var dome = await _domeRepository.GetByMacAddressAsync(macAddress);
             if (dome == null)
                 return new { water = false, durationMinutes = 0, source = "None" };
 
-            // لا توجد جلسة ري نشطة
+            
             if (!dome.IsManualWateringRequested)
                 return new { water = false, durationMinutes = 0, source = "None" };
 
-            // جلسة ري نشطة — نقرر هل نكمّل أم نوقف
+            
             var latest = await _sensorRepository.GetLatestReadingAsync(dome.Id);
-            const double StopBuffer = 5.0; // نوقف عند تجاوز الحد بـ 5% لتجنّب التذبذب
 
-            bool soilReached = latest != null && latest.SoilMoisture >= dome.MinTargetMoisture + StopBuffer;
+            
+            
+            
+            double upperLimit;
+            if (dome.WateringSource == "AI")
+                upperLimit = dome.MinTargetMoisture + 10;
+            else
+                upperLimit = dome.OptimalMoistureMax > dome.MinTargetMoisture
+                    ? dome.OptimalMoistureMax
+                    : dome.MinTargetMoisture + 10;
+
+            bool soilReached = latest != null && latest.SoilMoisture >= upperLimit;
             bool rainStarted = latest != null && latest.RainState >= 1.0;
             bool maxDurationElapsed = dome.LastWateredAt.HasValue &&
                 (DateTime.Now - dome.LastWateredAt.Value).TotalMinutes >= dome.WateringDurationMinutes;
 
             if (soilReached || rainStarted || maxDurationElapsed)
             {
-                dome.IsManualWateringRequested = false; // إنهاء الجلسة → أمر إيقاف
+                dome.IsManualWateringRequested = false; 
                 _domeRepository.Update(dome);
                 await _domeRepository.SaveChangesAsync();
 
-                string reason = soilReached ? $"الرطوبة وصلت {latest.SoilMoisture:F1}%"
+                string reason = soilReached ? $"الرطوبة وصلت الحد الأعلى {upperLimit:F0}% (القراءة {latest.SoilMoisture:F1}%)"
                               : rainStarted ? "بدأ المطر"
                               : "انتهت مدة الأمان القصوى";
                 await _notificationService.CreateNotificationAsync(dome.Id, $"توقفت السقاية تلقائياً — {reason}");
@@ -137,7 +147,7 @@ namespace ARGI.BLL.Service
                 return new { water = false, durationMinutes = 0, source = dome.WateringSource };
             }
 
-            // استمرار الري
+            
             return new { water = true, durationMinutes = dome.WateringDurationMinutes, source = dome.WateringSource };
         }
     }
